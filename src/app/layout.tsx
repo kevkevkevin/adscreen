@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Manage your advertising screens seamlessly.",
 };
 
+import Script from "next/script";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,6 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark h-full">
+      <head>
+        <Script 
+          src="https://cdnjs.cloudflare.com/ajax/libs/core-js-bundle/3.33.0/minified.js" 
+          strategy="beforeInteractive" 
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#050505] text-white overflow-hidden flex`}
       >

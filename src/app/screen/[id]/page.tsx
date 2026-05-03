@@ -32,7 +32,7 @@ export default function ScreenView() {
   if (activeMedia === null) {
     // No active media set
     return (
-      <div className="w-screen h-screen flex flex-col items-center justify-center bg-black gap-4 text-white/50">
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-black space-y-4 text-white/50">
         <p className="text-2xl font-semibold tracking-wider">ADCAST SCREEN SYSTEM</p>
         <p>Awaiting media assignment from dashboard...</p>
         <p className="text-xs mt-8 px-4 py-1 rounded bg-white/5 font-mono">Screen ID: {screenId}</p>
