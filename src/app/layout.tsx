@@ -30,10 +30,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark h-full">
       <head>
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/core-js-bundle/3.33.0/minified.js" 
-          strategy="beforeInteractive" 
-        />
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (typeof globalThis === 'undefined') {
+            window.globalThis = window;
+          }
+        `}} />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js-bundle/3.33.0/minified.js"></script>
+        <script src="https://unpkg.com/abortcontroller-polyfill/dist/abortcontroller-polyfill-only.js"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#050505] text-white overflow-hidden flex`}
