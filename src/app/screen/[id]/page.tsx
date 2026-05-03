@@ -62,7 +62,7 @@ export default function ScreenView() {
       )}
       
       {/* Screen ID identifier */}
-      <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 opacity-30 pointer-events-none">
+      <div className="absolute bottom-4 right-4 bg-zinc-900 px-3 py-1.5 rounded-full border border-white/10 opacity-30 pointer-events-none">
         <span className="text-white text-xs font-medium tracking-widest">{screenId.toUpperCase()}</span>
       </div>
     </div>

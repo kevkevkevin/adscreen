@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MonitorPlay, KeyRound, Loader2 } from "lucide-react";
+import { MonitorPlay, KeyRound, Loader2, Maximize } from "lucide-react";
 import { getScreenIdByPasscode } from "@/lib/firebase";
 import clsx from "clsx";
 
@@ -11,6 +11,19 @@ export default function ScreenPortal() {
   const [passcode, setPasscode] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleFullscreen = () => {
+    const docEl = document.documentElement as any;
+    if (docEl.requestFullscreen) {
+      docEl.requestFullscreen();
+    } else if (docEl.webkitRequestFullscreen) {
+      docEl.webkitRequestFullscreen();
+    } else if (docEl.mozRequestFullScreen) {
+      docEl.mozRequestFullScreen();
+    } else if (docEl.msRequestFullscreen) {
+      docEl.msRequestFullscreen();
+    }
+  };
 
   const handleConnect = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,11 +51,17 @@ export default function ScreenPortal() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
+      
+      <button 
+        onClick={handleFullscreen}
+        className="absolute top-6 right-6 p-4 bg-zinc-900 rounded-xl text-white/50 hover:text-white border border-white/10 transition-colors z-20"
+        title="Fullscreen"
+      >
+        <Maximize className="w-6 h-6" />
+      </button>
 
-      <div className="glassmorphism p-10 rounded-3xl w-full max-w-md relative z-10 text-center border border-white/10 shadow-2xl">
-        <div className="w-20 h-20 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(228,0,43,0.3)]">
+      <div className="bg-zinc-900 p-10 rounded-3xl w-full max-w-md relative z-10 text-center border border-white/10">
+        <div className="w-20 h-20 bg-black/50 rounded-2xl flex items-center justify-center mx-auto mb-6">
           <MonitorPlay className="w-10 h-10 text-primary" />
         </div>
         
