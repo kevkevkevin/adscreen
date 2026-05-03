@@ -120,6 +120,12 @@ export default function ScreenPortal() {
               type="text"
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleConnect(e);
+                }
+              }}
               placeholder="ENTER SECRET KEY"
               style={{
                 width: '100%',
@@ -144,7 +150,8 @@ export default function ScreenPortal() {
           )}
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleConnect}
             disabled={isConnecting || !passcode.trim()}
             style={{
               width: '100%',
@@ -157,28 +164,10 @@ export default function ScreenPortal() {
               border: 'none',
               cursor: (isConnecting || !passcode.trim()) ? 'not-allowed' : 'pointer',
               opacity: (isConnecting || !passcode.trim()) ? 0.5 : 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              textAlign: 'center'
             }}
           >
-            {isConnecting ? (
-              <>
-                <div style={{
-                  width: '20px',
-                  height: '20px',
-                  border: '2px solid #ffffff',
-                  borderTopColor: 'transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite',
-                  marginRight: '8px'
-                }}></div>
-                <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-                Connecting...
-              </>
-            ) : (
-              "Connect"
-            )}
+            {isConnecting ? "CONNECTING..." : "CONNECT"}
           </button>
         </form>
       </div>
