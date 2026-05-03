@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MonitorPlay, KeyRound, Loader2, Maximize } from "lucide-react";
 import { getScreenIdByPasscode } from "@/lib/firebase";
-import clsx from "clsx";
 
 export default function ScreenPortal() {
   const router = useRouter();
@@ -50,54 +49,131 @@ export default function ScreenPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#000000',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px',
+      position: 'relative',
+      fontFamily: 'sans-serif',
+      color: '#ffffff',
+      overflow: 'hidden'
+    }}>
       
       <button 
         onClick={handleFullscreen}
-        className="absolute top-6 right-6 p-4 bg-zinc-900 rounded-xl text-white/50 hover:text-white border border-white/10 transition-colors z-20"
+        style={{
+          position: 'absolute',
+          top: '24px',
+          right: '24px',
+          padding: '16px',
+          backgroundColor: '#18181b',
+          borderRadius: '12px',
+          color: 'rgba(255,255,255,0.5)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          cursor: 'pointer',
+          zIndex: 20
+        }}
         title="Fullscreen"
       >
-        <Maximize className="w-6 h-6" />
+        <Maximize size={24} />
       </button>
 
-      <div className="bg-zinc-900 p-10 rounded-3xl w-full max-w-md relative z-10 text-center border border-white/10">
-        <div className="w-20 h-20 bg-black/50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <MonitorPlay className="w-10 h-10 text-primary" />
+      <div style={{
+        backgroundColor: '#18181b',
+        padding: '40px',
+        borderRadius: '24px',
+        width: '100%',
+        maxWidth: '400px',
+        position: 'relative',
+        zIndex: 10,
+        textAlign: 'center',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <div style={{
+          width: '80px',
+          height: '80px',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          borderRadius: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 24px auto'
+        }}>
+          <MonitorPlay size={40} color="#e4002b" />
         </div>
         
-        <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Connect Display</h1>
-        <p className="text-muted-foreground mb-8">
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>Connect Display</h1>
+        <p style={{ color: 'rgba(255,255,255,0.5)', margin: '0 0 32px 0', fontSize: '14px' }}>
           Enter the secret key assigned to this screen to start casting media.
         </p>
 
-        <form onSubmit={handleConnect} className="space-y-6">
-          <div className="relative">
-            <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <form onSubmit={handleConnect} style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'relative', marginBottom: '24px' }}>
+            <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }}>
+              <KeyRound size={20} color="rgba(255,255,255,0.4)" />
+            </div>
             <input
               type="text"
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
               placeholder="ENTER SECRET KEY"
-              className={clsx(
-                "w-full bg-black/50 border rounded-2xl py-4 pl-12 pr-4 text-center text-xl tracking-[0.2em] font-mono text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all uppercase",
-                error ? "border-red-500/50 focus:ring-red-500/50" : "border-white/10"
-              )}
+              style={{
+                width: '100%',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                border: error ? '1px solid #ef4444' : '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '16px',
+                padding: '16px 16px 16px 48px',
+                textAlign: 'center',
+                fontSize: '20px',
+                letterSpacing: '4px',
+                fontFamily: 'monospace',
+                color: '#ffffff',
+                textTransform: 'uppercase',
+                boxSizing: 'border-box'
+              }}
               required
             />
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm">{error}</p>
+            <p style={{ color: '#f87171', fontSize: '14px', margin: '0 0 24px 0' }}>{error}</p>
           )}
 
           <button
             type="submit"
             disabled={isConnecting || !passcode.trim()}
-            className="w-full py-4 bg-primary hover:bg-primary-dark disabled:opacity-50 text-white font-bold text-lg rounded-2xl transition-all shadow-[0_0_20px_rgba(228,0,43,0.4)] flex items-center justify-center"
+            style={{
+              width: '100%',
+              padding: '16px',
+              backgroundColor: '#e4002b',
+              color: '#ffffff',
+              fontWeight: 'bold',
+              fontSize: '18px',
+              borderRadius: '16px',
+              border: 'none',
+              cursor: (isConnecting || !passcode.trim()) ? 'not-allowed' : 'pointer',
+              opacity: (isConnecting || !passcode.trim()) ? 0.5 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             {isConnecting ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                <div style={{
+                  width: '20px',
+                  height: '20px',
+                  border: '2px solid #ffffff',
+                  borderTopColor: 'transparent',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite',
+                  marginRight: '8px'
+                }}></div>
+                <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
                 Connecting...
               </>
             ) : (
@@ -107,7 +183,13 @@ export default function ScreenPortal() {
         </form>
       </div>
       
-      <p className="absolute bottom-8 text-xs text-white/30 font-mono">
+      <p style={{
+        position: 'absolute',
+        bottom: '32px',
+        fontSize: '12px',
+        color: 'rgba(255,255,255,0.3)',
+        fontFamily: 'monospace'
+      }}>
         AdCast Digital Signage Platform
       </p>
     </div>

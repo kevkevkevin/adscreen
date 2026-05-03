@@ -3,11 +3,25 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { subscribeToActiveMedia, type MediaItem } from "@/lib/firebase";
+import { Maximize } from "lucide-react";
 
 export default function ScreenView() {
   const params = useParams();
   const screenId = params.id as string;
   const [activeMedia, setActiveMedia] = useState<MediaItem | null | undefined>(undefined);
+
+  const handleFullscreen = () => {
+    const docEl = document.documentElement as any;
+    if (docEl.requestFullscreen) {
+      docEl.requestFullscreen();
+    } else if (docEl.webkitRequestFullscreen) {
+      docEl.webkitRequestFullscreen();
+    } else if (docEl.mozRequestFullScreen) {
+      docEl.mozRequestFullScreen();
+    } else if (docEl.msRequestFullscreen) {
+      docEl.msRequestFullscreen();
+    }
+  };
 
   useEffect(() => {
     if (!screenId) return;
@@ -20,11 +34,35 @@ export default function ScreenView() {
     return () => unsubscribe();
   }, [screenId]);
 
+  const baseContainerStyle: React.CSSProperties = {
+    width: '100%',
+    height: '100vh',
+    margin: 0,
+    padding: 0,
+    backgroundColor: '#000000',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontFamily: 'sans-serif',
+    overflow: 'hidden',
+    position: 'relative'
+  };
+
   if (activeMedia === undefined) {
     // Initial loading state
     return (
-      <div className="w-screen h-screen flex items-center justify-center bg-black">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <div style={baseContainerStyle}>
+        <div style={{
+          width: '64px',
+          height: '64px',
+          border: '4px solid #e4002b',
+          borderTopColor: 'transparent',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }}></div>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
@@ -32,27 +70,54 @@ export default function ScreenView() {
   if (activeMedia === null) {
     // No active media set
     return (
-      <div className="w-screen h-screen flex flex-col items-center justify-center bg-black space-y-4 text-white/50">
-        <p className="text-2xl font-semibold tracking-wider">ADCAST SCREEN SYSTEM</p>
-        <p>Awaiting media assignment from dashboard...</p>
-        <p className="text-xs mt-8 px-4 py-1 rounded bg-white/5 font-mono">Screen ID: {screenId}</p>
+      <div style={baseContainerStyle}>
+        <button 
+          onClick={handleFullscreen}
+          style={{
+            position: 'absolute',
+            top: '24px',
+            right: '24px',
+            padding: '16px',
+            backgroundColor: '#18181b',
+            borderRadius: '12px',
+            color: 'rgba(255,255,255,0.5)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            cursor: 'pointer',
+            zIndex: 20
+          }}
+          title="Fullscreen"
+        >
+          <Maximize size={24} />
+        </button>
+
+        <p style={{ fontSize: '24px', fontWeight: 600, letterSpacing: '2px', margin: '0 0 16px 0' }}>ADCAST SCREEN SYSTEM</p>
+        <p style={{ margin: '0 0 32px 0' }}>Awaiting media assignment from dashboard...</p>
+        <p style={{ 
+          fontSize: '12px', 
+          padding: '4px 16px', 
+          backgroundColor: 'rgba(255,255,255,0.05)', 
+          borderRadius: '4px',
+          fontFamily: 'monospace'
+        }}>
+          Screen ID: {screenId}
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="w-screen h-screen bg-black overflow-hidden flex items-center justify-center relative">
+    <div style={{ ...baseContainerStyle, padding: 0 }}>
       {activeMedia.type === "image" ? (
         <img
           src={activeMedia.url}
           alt={activeMedia.name}
-          className="w-full h-full object-cover animate-in fade-in duration-1000"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           key={activeMedia.id} // Forces re-render for animation on change
         />
       ) : (
         <video
           src={activeMedia.url}
-          className="w-full h-full object-cover animate-in fade-in duration-1000"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           autoPlay
           loop
           muted
@@ -61,9 +126,41 @@ export default function ScreenView() {
         />
       )}
       
+      {/* Fullscreen Button */}
+      <button 
+        onClick={handleFullscreen}
+        style={{
+          position: 'absolute',
+          top: '24px',
+          right: '24px',
+          padding: '16px',
+          backgroundColor: '#18181b',
+          borderRadius: '12px',
+          color: 'rgba(255,255,255,0.5)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          cursor: 'pointer',
+          zIndex: 20
+        }}
+        title="Fullscreen"
+      >
+        <Maximize size={24} />
+      </button>
+
       {/* Screen ID identifier */}
-      <div className="absolute bottom-4 right-4 bg-zinc-900 px-3 py-1.5 rounded-full border border-white/10 opacity-30 pointer-events-none">
-        <span className="text-white text-xs font-medium tracking-widest">{screenId.toUpperCase()}</span>
+      <div style={{
+        position: 'absolute',
+        bottom: '16px',
+        right: '16px',
+        backgroundColor: '#18181b',
+        padding: '6px 12px',
+        borderRadius: '999px',
+        border: '1px solid rgba(255,255,255,0.1)',
+        opacity: 0.5,
+        pointerEvents: 'none'
+      }}>
+        <span style={{ color: 'white', fontSize: '12px', fontWeight: 500, letterSpacing: '2px' }}>
+          {screenId.toUpperCase()}
+        </span>
       </div>
     </div>
   );
